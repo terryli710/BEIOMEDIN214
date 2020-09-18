@@ -4,9 +4,9 @@
 
 ## Important Information
 
-1. Project 1 is due by **5:00:00****pm PDT on October 2, 2020**. Projects turned in within 24 hours after the deadline will receive a 10% deduction. Projects turned in within 48 hours after the deadline will receive a 20% deduction. Projects turned in within 72 hours after the deadline will receive a 30% deduction. **No submissions will be accepted more than 72 hours after the deadline.** 
+1. Project 1 is due by **5:00:00pm PDT on October 2, 2020**. Projects turned in within 24 hours after the deadline will receive a 10% deduction. Projects turned in within 48 hours after the deadline will receive a 20% deduction. Projects turned in within 72 hours after the deadline will receive a 30% deduction. **No submissions will be accepted more than 72 hours after the deadline.** 
 
-   Note: we have given a substantial amount of time to complete this particular project due to its challenging nature. We recommend starting this assignment early, as troubleshooting can be quite time consuming.
+   Note: we have given a substantial amount of time to complete this particular project due to its challenging nature. <u>We recommend starting this assignment early, as troubleshooting can be quite time consuming.</u>
 
 2. Programming projects must be completed individually. You may discuss algorithms with others, but the coding should be done alone. You must explicitly name everyone with whom you discussed this project in the header comments of your code and in the collaboration attestation in the project quiz. Students must abide by the terms of the Stanford Honor Code.
 
@@ -45,7 +45,7 @@ Your code should follow exactly the equations on page 29 of the [Durbin et al](h
 
  
 
-1. According to Durbin, sequence x (or sequence 1) is on the top of the scoring matrix, while sequence y (or sequence 2) is on the left side of the scoring matrix. Therefore, the i-th character in x corresponds to the i-th *column* in the scoring matrix, while the j-th character in y corresponds to the j-th *row* in the scoring matrix. In the equations on page 29 (equations 2.16), the first index is the *column* index, and the second index is the *row* index. ***\*This is opposite to what we usually see in programming languages and to what Russ did in class.\**** **We recommend that you follow the convention that Russ described in class!** While it will work either way, the standard convention will make it easier for you to debug, and easier for you to receive partial credit.***\*
+1. According to Durbin, sequence x (or sequence 1) is on the top of the scoring matrix, while sequence y (or sequence 2) is on the left side of the scoring matrix. Therefore, the i-th character in x corresponds to the i-th *column* in the scoring matrix, while the j-th character in y corresponds to the j-th *row* in the scoring matrix. In the equations on page 29 (equations 2.16), the first index is the *column* index, and the second index is the *row* index. **This is opposite to what we usually see in programming languages and to what Russ did in class** **We recommend that you follow the convention that Russ described in class!** While it will work either way, the standard convention will make it easier for you to debug, and easier for you to receive partial credit.***\*
    \****
 
 2. The Durbin et al textbook assumes the same gap penalty for both sequences. However, we have different values for the two sequences. Therefore, in the Ix equation, **d should be dy, and e should be ey, because Ix means inserting a gap in sequence y. Similarly, in the Iy equation, d should be dx, and e should be ex.**
@@ -118,7 +118,7 @@ CCGTAC
 CCGTAC
 ```
 
-  \5. During local alignment, if you trace back to a cell that contains pointers to a zero in the M matrix and a pointer to a zero in the Ix or Iy matrix, you should only follow the pointer to the zero in the M matrix and terminate your traceback there only. This will prevent you from having alignments that are right-sided substrings.
+5. During local alignment, if you trace back to a cell that contains pointers to a zero in the M matrix and a pointer to a zero in the Ix or Iy matrix, you should only follow the pointer to the zero in the M matrix and terminate your traceback there only. This will prevent you from having alignments that are right-sided substrings.
 
 #  
 
@@ -276,11 +276,11 @@ python3 align_test.py
 
 It will tell you if the tests fail or pass.
 
-*'**Note - you do not have to implement unit tests, but we strongly recommend you do. For grading purposes, we will be using these and similar tests to give partial credit. See note on grading at the end.***
+***Note - you do not have to implement unit tests, but we strongly recommend you do. For grading purposes, we will be using these and similar tests to give partial credit. See note on grading at the end.***
 
 
 
-*Debugging advice:*
+<u>*Debugging advice:*</u>
 
 
 
@@ -320,7 +320,7 @@ You should test your program on several alignments, several of which are provide
 
 The following illustration is very helpful for gaining some visual intuition for the recursion formulas covered in class. Make sure you understand conceptually what's going on here and look at which arrow is pointing where and why.
 
-![alignments](https://canvas.stanford.edu/courses/122868/files/6502010/download?wrap=1)
+![alignments](alignments.png)
 
 Additionally, here are two demos that allow you to play with some alignments: [Demo1 (Links to an external site.)](https://gtuckerkellogg.github.io/pairwise/demo/) and [Demo2 (Links to an external site.)](http://experiments.mostafa.io/public/needleman-wunsch/)
 
