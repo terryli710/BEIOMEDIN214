@@ -6,7 +6,7 @@ To run, write code that calls each function with the appropriate input/output fi
 """
 
 from typing import Set, Tuple  # NOTE: You may need to "pip install typing" locally if this import gives you errors
-
+from align import AlignmentParameters
 
 def is_number(s: str) -> bool:
     """
@@ -168,3 +168,43 @@ def count_gaps(fname: str) -> Tuple[float, float]:
     print("Average number of gaps per alignment: %.2f" %avg_num_gaps)
     print("Average length of gaps (this is the average of all averages): %.2f" %avg_length_all)
     return (avg_num_gaps, avg_length_all)
+
+
+def calculateScore(align_a: str, align_b: str, align_params: AlignmentParameters) -> float:
+    '''
+    calculate score of alignment "white-box-ly" and independent of the algorithm, for debug usage
+    :param align_a: alignment string for seq a
+    :param align_b: alignment string for seq b
+    :param align_params: information of match matrix etc.
+    :return: score of this alignment
+    '''
+    score = 0
+    assert len(align_a) == len(align_b), "alignment length diff error"
+    # iterate through the sequence to score
+    state = 'M'
+    for i in range(len(align_a)):
+        # match
+        if align_a[i] != '_' and align_b[i] != '_':
+            score += align_params.match_matrix.get_score(align_a[i], align_b[i])
+            state = 'M'
+        # if seq_b matches with gap
+        elif align_a[i] == '_':
+            # if new gap
+            if state == 'M':
+                score -= align_params.dx
+                state = 'Iy'
+            # if extended gap
+            elif state == 'Iy':
+                score -= align_params.ex
+                state = 'Iy'
+        # if seq_a matches with gap
+        elif align_b[i] == '_':
+            # if new gap
+            if state == 'M':
+                score -= align_params.dy
+                state = 'Ix'
+            # if extended gap
+            elif state == 'Ix':
+                score -= align_params.ey
+                state = 'Ix'
+    return score
