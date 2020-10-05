@@ -12,7 +12,6 @@ Usage: python align.py input_file output_file
 import sys
 from typing import Set, Tuple, \
     List  # NOTE: You may need to "pip install typing" locally if this import gives you errors
-
 import numpy as np
 
 
@@ -266,7 +265,7 @@ class AlignmentParameters(object):
         except FileNotFoundError:
             print("File name \"{}\" invalid.".format(input_file))
             return
-        lines = [line.split(' ') for line in content.split('\n')]
+        lines = [line.split() for line in content.split('\n')]
         self.seq_a = lines[0][0]
         self.seq_b = lines[1][0]
         self.global_alignment = not int(lines[2][0])
@@ -280,7 +279,7 @@ class AlignmentParameters(object):
         self.alphabet_b = lines[7][0]
         for line in lines[8:]:
             # except for empty line
-            if line == ['']: continue
+            if line == [''] or line == []: continue
             # set score iteratively
             self.match_matrix.set_score(line[2], line[3], float(line[4]))
         pass
@@ -324,7 +323,7 @@ class Align(object):
         # best score when B[j] matches with '_'
         self.iy_matrix = ScoreMatrix('Iy', self.nrow, self.ncol)
 
-    def align(self):
+    def align(self, verbose=False):
         """
         Main method for running the alignment.
 
@@ -348,7 +347,8 @@ class Align(object):
         # print the results
         # for trace in traces: print(self.visualizePaths(trace))
         # store the alignments
-        for trace in traces: print(self.__printOutput__(trace), '\n')
+        if verbose:
+            for trace in traces: print(self.__printOutput__(trace), '\n')
         score_content = str(round(score, 1)) + '\n\n'
         self.alignment_result = score_content + '\n'.join(self.__printOutput__(trace) + '\n' for trace in traces)
         self.write_output()
@@ -638,11 +638,15 @@ class Align(object):
         """
         Write the output of an alignment to the output file.
         """
-
+        # if output_file is not specified, then save nothing
+        import os
+        if (self.output_file=='') or (not os.path.isdir(os.path.dirname(self.output_file))):
+            print('Didn\'t save file')
+            return
         with open(self.output_file, "w") as f:
             f.write(self.alignment_result)
         print('Saved to', self.output_file)
-        pass
+        return
 
 
 # DO NOT MODIFY THE CODE BELOW!
