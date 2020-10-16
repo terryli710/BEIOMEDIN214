@@ -84,20 +84,20 @@ Any data included in the output formatting examples are made up and should not b
 
 2. Create a class, named GSEA, to implement a given gene set enrichment analysis. Initialize the class with the expression data, sample assignments and list of gene sets. GSEA should be able to perform the following:
 
-   1. 1. Rank genes by their log fold-change between healthy donors and endometriosis patients by taking the log2 of the ratio of mean endometriosis patient expression to mean healthy expression per gene. As the values have already been log normalized, subtracting the values will get you this ratio (you do not need to re-log-normalize the values): $\log{FC_{gene}} = \log(Patient_{gene}) -\log(Control_{gene})$
-      2. Calculate the enrichment score (ES) of a gene set in the ranked gene list. You can exclude KEGG genes not in the expression data. This should implement the Brownian bridge discussed in class. As a reminder, the steps to calculate the ES are below, and this link may be helpful, Enrichment score steps](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3205944/#SD1).
-         - (a) Calculate the appropriate up or down score for this particular gene set, controlling for the number of genes.
-         - (b) Move down the ranked list of genes, adding to the running sum the value from (a) if the gene is in the set of interest, or subtracting from the running sum if not.
-         - (c) Find the supremum of the brownian bridge as the ES. We are interested in gene sets that are enriched in up-regulated genes here, so do not take the absolute value in this case.
-      3. *For your debugging only*: output the enrichment score (rounded to 2 decimal places) of each gene set, sorted with the highest score first, in a tab-delimited file named `kegg_enrichment_scores.txt` as follows (again, no header): '`KEGG_CITRATE_CYCLE_TCA_CYCLE 4.20`'
-      4. Create a background distribution of enrichment scores by permuting the sample labels and re-calculating the ranked gene list 100 times and calculate a p-value for each gene set by counting the number of times in the permuted iterations a gene set had an equal or higher score than its actual score over the total number of iterations.
-      5. Correct p-values for number of tests (equal to the number of gene sets) via Bonferroni
+   1. Rank genes by their log fold-change between healthy donors and endometriosis patients by taking the log2 of the ratio of mean endometriosis patient expression to mean healthy expression per gene. As the values have already been log normalized, subtracting the values will get you this ratio (you do not need to re-log-normalize the values): $\log{FC_{gene}} = \log(Patient_{gene}) -\log(Control_{gene})$
+   2. Calculate the enrichment score (ES) of a gene set in the ranked gene list. You can exclude KEGG genes not in the expression data. This should implement the Brownian bridge discussed in class. As a reminder, the steps to calculate the ES are below, and this link may be helpful, [Enrichment score steps](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3205944/#SD1).
+      - (a) Calculate the appropriate up or down score for this particular gene set, controlling for the number of genes.
+      - (b) Move down the ranked list of genes, adding to the running sum the value from (a) if the gene is in the set of interest, or subtracting from the running sum if not.
+      - (c) Find the supremum of the Brownian Bridge as the ES. We are interested in gene sets that are enriched in up-regulated genes here, so do not take the absolute value in this case.
+   3. For your debugging only*: output the enrichment score (rounded to 2 decimal places) of each gene set, sorted with the highest score first, in a tab-delimited file named `kegg_enrichment_scores.txt` as follows (again, no header): '`KEGG_CITRATE_CYCLE_TCA_CYCLE 4.20`'
+   4. Create a background distribution of enrichment scores by permuting the sample labels and re-calculating the ranked gene list 100 times and calculate a p-value for each gene set by counting the number of times in the permuted iterations a gene set had an equal or higher score than its actual score over the total number of iterations.
+   5. Correct p-values for number of tests (equal to the number of gene sets) via Bonferroni
 
 3. You can include as many functions or additional classes as you would like within to accomplish the above, but the <u>following functionality must be present</u> for grading purposes:
 
    1. 1. `GSEA.load_data`(`expfile`, `sampfile`, `genesets`) should take the file paths to the expression, sample and gene set data, read them in and store within the GSEA instance.
       2. `GSEA.get_gene_rank_order()` should return a list of all genes (as strings) ranked by their logFC between patient and control, with the gene with the highest logFC ordered first.
-      3. `GSEA.get_enrichment_score(geneset)` should return the enrichment score, a float correct to two decimal places, for a given gene set, such as ‘KEGG_CITRATE_CYCLE_TCA_CYCLE’. This method should run get_gene_rank_order at some point to initiate enrichment calculations.
+      3. `GSEA.get_enrichment_score(geneset)` should return the enrichment score, a float correct to two decimal places, for a given gene set, such as `KEGG_CITRATE_CYCLE_TCA_CYCLE`. This method should run get_gene_rank_order at some point to initiate enrichment calculations.
       4. `GSEA.get_sig_sets(p)` should return the list of significant gene sets (as strings), at a corrected threshold of p, by name. If no gene sets are significant, return an empty list. This method should run get_gene_rank_order and/or get_enrichment_score at some point to initiate enrichment calculations and then identify significant gene sets.
 
 You will submit two scripts, which should be able to run as:
