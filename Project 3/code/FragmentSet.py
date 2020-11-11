@@ -1,5 +1,6 @@
 import os
 import re
+from typing import List, Tuple
 
 
 class FragmentSet(object):
@@ -20,6 +21,8 @@ class FragmentSet(object):
                 self.rmsdfile = self.__preprocessRmsdFile__(f.read())
         except FileNotFoundError:
             print("RMSD file not found.")
+        assert self.fragfile.keys()==self.rmsdfile.keys(), "Keys differ"
+        self.length = max(self.fragfile.keys())
         return
 
     @staticmethod
@@ -41,6 +44,8 @@ class FragmentSet(object):
                     sub_dict = {}
                 # add this line
                 sub_dict[int(elems[1])] = float(elems[2])
+        # append the last dict
+        rmsd_dict[pos] = sub_dict
         return rmsd_dict
 
     def __preprocessFragFile__(self, raw_frag_file: str) -> dict:
@@ -62,8 +67,8 @@ class FragmentSet(object):
                 frag_dict[row_num] = []
                 cur_lst = []
             elif row:
-                index = int(row[92:94])
-                cur_lst.append((float(row[19:27]), float(row[28:36])))
+                index = int(row[91:94])
+                cur_lst.append((float(row[18:27]), float(row[28:36])))
             else:
                 if cur_lst:
                     frag_dict[row_num].append((index, cur_lst))
@@ -72,13 +77,18 @@ class FragmentSet(object):
 
     @staticmethod
     def __findPosition__(row: str) -> int:
-        position = re.search('position:            ([0-9]+) neighbors', row)
+        position = re.search('position:\s+([0-9]+) neighbors', row)
         try:
             result = int(position.group(1))
             return result
         except AttributeError:
             print("Cannot find position.")
             return 0
+
+    def findFragIndex(self, pos: int, fragment: List[Tuple]) -> int:
+        result = [t[0] for t in self.fragfile[pos] if t[1] == fragment]
+        assert len(result) == 1, "Duplicate fragments"
+        return result[0]
 
     def get_lowRMS_fragments(self, pos, N):
         """
@@ -96,18 +106,3 @@ class FragmentSet(object):
         selected_index = sorted(rmsd_dict, key=rmsd_dict.get)[:N]
         # return those fragments
         return [t[1] for t in self.fragfile[pos] if t[0] in set(selected_index)]
-
-
-def debug():
-    from pathlib import Path
-    cur_path = os.getcwd()
-    project_dir = Path(cur_path).parent
-    data_dir = os.path.join(cur_path, "starter_data")
-    frag = "helix_9mers.frag"
-    rmsd = "helix_9mers.rmsd"
-    fs = FragmentSet(os.path.join(data_dir, frag), os.path.join(data_dir, rmsd))
-    fs.get_lowRMS_fragments(3, 3)
-
-
-# if __name__ == '__main__':
-#     debug()

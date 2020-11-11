@@ -1,5 +1,4 @@
 from pyrosetta import *
-from Bio.SeqIO import parse
 from typing import Tuple
 init(extra_options="-mute all -constant_seed")
 
@@ -45,7 +44,7 @@ class Protein(object):
 		A good starting point is to set all phi angles to -150 degrees and all psi angles to 150 degrees.
 		--------
 		"""
-        # starting from 1 to self.length]
+        # starting from 1 to self.length
         for pos in range(1, self.length + 1):
             self.pose.set_phi(pos, -150)
             self.pose.set_psi(pos, 150)
@@ -53,7 +52,6 @@ class Protein(object):
 
     def get_torsion(self, pos: int) -> Tuple[int, int]:
         """
-		TODO: get torsion angles at a defined position. You don't need to worry about omega angles (why?)
 		The following reference may be useful for interacting with the Pose object:
 		https://graylab.jhu.edu/pyrosetta/downloads/documentation/pyrosetta4_online_format/PyRosetta4_Workshop2_PyRosetta.pdf
 		--------
@@ -67,7 +65,6 @@ class Protein(object):
 
     def set_torsion(self, pos: int, phi: int, psi: int) -> None:
         """
-		TODO: set torsion angles at a defined position. You don't need to worry about omega angles (why?)
 		The following reference may be useful for interacting with the Pose object:
 		https://graylab.jhu.edu/pyrosetta/downloads/documentation/pyrosetta4_online_format/PyRosetta4_Workshop2_PyRosetta.pdf
 		--------
@@ -85,17 +82,3 @@ class Protein(object):
 		Saves current structure to PDB file. You do not need to modify this function.
 		"""
         self.pose.dump_pdb(filename)
-
-def debug():
-    from pathlib import Path
-    cur_path = os.getcwd()
-    project_dir = Path(cur_path).parent
-    data_dir = os.path.join(project_dir, "starter_data")
-    doc_name = "1fw4.fasta"
-    iterator = parse(os.path.join(data_dir, doc_name), "fasta")
-    seq = next(iterator)
-    p = Protein(sequence=seq.seq._data)
-    p.init_extended()
-
-# if __name__ == '__main__':
-#     debug()

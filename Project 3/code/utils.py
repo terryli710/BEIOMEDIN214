@@ -17,9 +17,10 @@ scorefxn_fa = get_fa_scorefxn()
 convert3to1 = {'HIS':'H','LYS':'K','ARG':'R','ASP':'D','GLU':'E','SER':'S','THR':'T','ASN':'N','GLN':'Q','ALA':'A','VAL':'V','LEU':'L','ILE':'I','MET':'M','PHE':'F','TYR':'Y','TRP':'W','PRO':'P','GLY':'G','CYS':'C'}
 convert1to3 = {'H':'HIS','K':'LYS','R':'ARG','D':'ASP','E':'GLU','S':'SER','T':'THR','N':'ASN','Q':'GLN','A':'ALA','V':'VAL','L':'LEU','I':'ILE','M':'MET','F':'PHE','Y':'TYR','W':'TRP','P':'PRO','G':'GLY','C':'CYS'}
 
+
 def score_pose(pose, scorefxn):
 	"""
-	Utility function that scores a pose using a given scorefunction
+	Utility function that scores a pose using a given score function
 	Params
 		- pose (pose object): pose object produced by pose_from_pdb or Protein.pose
 		- scorefxn (ScoreFunction object): path to native structure in PDB format
@@ -28,6 +29,7 @@ def score_pose(pose, scorefxn):
 		- Score after minimization (float)
 	"""
 	return scorefxn(pose)
+
 
 def relax(pdb, native, scorefxn=scorefxn_fa):
 	"""
