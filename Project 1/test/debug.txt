@@ -1,0 +1,29 @@
+My alignment
+_TTA_____CAT
+ |:|     |||
+CTGAATGCCCAT
+full score: 168.3
+algorithm called: 168.7
+segment score: 168.3 - 165.8 = 2.5
+
+-0.5 + 0.9 + -0.2 + 1 - 0.5 - 0.3*4 + 1.1 + 1 + 0.9 = 2.5
+
+Correct alignment
+_TTACAT
+ |:| ||
+CTGA_AT
+
+-0.5 + 0.9 - 0.2 + 1 - 0.5 + 1 + 0.9 = 2.6
+
+full score: 168.4
+segment score: 168.4 - 165.8 = 2.6
+
+dx:0.5
+ex:0.3
+dy:0.5
+ey:0.2
+
+TT: 0.9
+AA: 1.0
+CC: 1.1
+TG:-0.2
