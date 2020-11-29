@@ -1,15 +1,17 @@
 """ This file provides util functions that are useful across code files to prevent duplicate codes"""
 
-import pandas as pd
 import os
 from collections import defaultdict
 from typing import List
+
+import pandas as pd
 
 
 class Drug(object):
     '''
     class for drug file loading and related operations
     '''
+
     def __init__(self, drug_file_path: str) -> None:
         '''
         Load file data
@@ -42,6 +44,7 @@ class Targets(object):
     '''
     class for loading target file and provide protein-based dictionary for searching
     '''
+
     def __init__(self, target_file_path: str) -> None:
         '''
         load file data
@@ -80,12 +83,3 @@ class Targets(object):
     def getAllProtein(self) -> list:
         '''get all protein accession as a list'''
         return list(self.protein_dict.keys())
-
-# def debug():
-#     t = Targets('data/targets.csv')
-#     a = t.getLigands('P37288')
-#     # print(a)
-#
-#
-# if __name__ == '__main__':
-#     debug()

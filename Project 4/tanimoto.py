@@ -1,13 +1,13 @@
 ''' This file outputs a csv file that contains <drugidA>,<drugidB>,<Tanimoto_score>,<share_target>'''
 
+import sys
 from collections import defaultdict
 from itertools import combinations
 from typing import Union
-import sys
 
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
 
 from chemoUtils import Targets, Drug
 
@@ -15,12 +15,18 @@ from chemoUtils import Targets, Drug
 class Tanimoto(object):
 
     def __init__(self, drug_file, targets_file):
+        '''
+        initialize instance
+        :param drug_file: drug_file path
+        :param targets_file: targets file path
+        '''
         self.drug = Drug(drug_file)
         self.targets = Targets(targets_file)
         self.result_dict = defaultdict(lambda: {})
         self.result_filled = False
 
-    def getDrugPair(self):
+    def getDrugPair(self) -> set:
+        ''' return all drug pairs '''
         return set(combinations(self.drug.getAllDrug(), 2))
 
     def calcTanimoto(self, drugA: str, drugB: str) -> float:
@@ -45,6 +51,7 @@ class Tanimoto(object):
         return set(result)
 
     def fillResult(self) -> None:
+        ''' function that fills self.result_dict '''
         drug_pair_set = self.getDrugPair()
         shared_drug_pairs = self.targetIntersect()
         print("Filling results")
@@ -58,6 +65,7 @@ class Tanimoto(object):
         return
 
     def getResultCsv(self) -> Union[None, pd.DataFrame]:
+        ''' returns the pandas DataFrame for csv saving '''
         if not self.result_filled:
             print('Result not computed')
             return None
@@ -75,38 +83,52 @@ class Tanimoto(object):
             return result_df
 
     def saveCsv(self, save_root) -> None:
+        '''
+        Save csv to save root
+        :param save_root: path and csv name to save
+        '''
         result_df = self.getResultCsv()
         if isinstance(result_df, pd.DataFrame):
-            result_df.to_csv(save_root, index=False, header=False)
+            result_df.to_csv(save_root, index=False, header=False, float_format='%.6f')
             print('Saved to ', save_root)
 
     def drawHistograms(self):
+        ''' Draw histograms by calling __drawHist__ '''
         sunitID = 'yyhhli'
         # plot all
         result_df = self.getResultCsv()
-        self.__drawHist__(result_df['tanimoto_score'], sunitID+' All', 'all_tanimoto.png')
+        self.__drawHist__(result_df['tanimoto_score'], sunitID + ' All', 'all_tanimoto.png')
         # plot shared
-        shared_df = result_df[result_df['shared_target']==1]['tanimoto_score']
-        self.__drawHist__(shared_df, sunitID+' Shared', 'shared_tanimoto.png')
+        shared_df = result_df[result_df['shared_target'] == 1]['tanimoto_score']
+        self.__drawHist__(shared_df, sunitID + ' Shared', 'shared_tanimoto.png')
         # plot notshared
         not_shared_df = result_df[result_df['shared_target'] == 0]['tanimoto_score']
         self.__drawHist__(not_shared_df, sunitID + ' Not Shared', 'notshared_tanimoto.png')
 
     @classmethod
-    def __drawHist__(cls, df_t_score, title, save_name):
+    def __drawHist__(cls, df_t_score: pd.DataFrame, title: str, save_name: str) -> None:
+        '''
+        Draw histogram
+        :param df_t_score: tanimoto score as a coloumn of pandas dataframe
+        :param title: title of the plot
+        :param save_name: saving name of the plot
+        '''
         plt.hist(df_t_score, bins=cls.calcNBins(df_t_score))
-        plt.title = title
+        plt.title(title)
+        plt.xlabel('Tanimoto Score')
+        plt.ylabel('Count')
         plt.savefig(save_name, dpi=400)
         plt.close()
 
     @classmethod
     def calcNBins(cls, df_t_score):
         ''' Calculating number of bins for histogram using scott'''
-        return int((np.max(df_t_score)-np.min(df_t_score))/(3.5 * np.std(df_t_score) / (df_t_score.shape[0] ** (1/3))))
+        return int(
+            (np.max(df_t_score) - np.min(df_t_score)) / (3.5 * np.std(df_t_score) / (df_t_score.shape[0] ** (1 / 3))))
 
 
 def main():
-    ''' Main function, save csv but don't draw histograms'''
+    ''' Main function, save csv and save plots'''
     drug_file, target_file, save_root = sys.argv[1:]
     t = Tanimoto(drug_file, target_file)
     t.fillResult()

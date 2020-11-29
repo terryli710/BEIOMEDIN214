@@ -1,13 +1,12 @@
 ''' This file prints the p-value for two proteins to indicate their similarity'''
 
-from chemoUtils import Drug, Targets
-from tanimoto import Tanimoto
-
 import argparse
 from itertools import product
 from typing import Union
 
 import numpy as np
+
+from tanimoto import Tanimoto
 
 
 class Similarity(object):
@@ -55,7 +54,7 @@ class Similarity(object):
         '''
         result = []
         for i in range(num):
-            np.random.seed(int(random_seed+i))
+            np.random.seed(int(random_seed + i))
             # sample from all the drugs (ligands) that we have
             set_a_boot = list(np.random.choice(list(self.tanimoto.drug.getAllDrug()), size=len_set_a, replace=True))
             set_b_boot = list(np.random.choice(list(self.tanimoto.drug.getAllDrug()), size=len_set_b, replace=True))
